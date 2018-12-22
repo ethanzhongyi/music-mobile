@@ -4,11 +4,14 @@
 
 修改 webpack.base.conf.js ：
 
-function resolve (dir) {
+```function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
 //意思是在该文件的上级目录下寻找，即根目录 [注： ‘.’ 一个点是当前目录 , ‘..’2个点是上级目录]
+```
 
+
+```
 resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
@@ -17,3 +20,4 @@ resolve: {
     }
   }
   //src/common 的alias别名为 common
+  ```
