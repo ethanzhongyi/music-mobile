@@ -87,7 +87,7 @@
           snapSpeed: 400
         })
 
-        // 滚动到下一张会派发一个 scrollEnd 事件
+        // 滚动到下一张会触发 scrollEnd 事件
         this.slider.on('scrollEnd', () => {
           let pageIndex = this.slider.getCurrentPage().pageX //获取当前页
           if(this.loop) {
@@ -95,6 +95,7 @@
           }
           this.currentPageIndex = pageIndex
 
+          //在滚动到下一张是去执行 _play 方法才能实现自动轮播
           if (this.autoPlay) {
             clearTimeout(this.timer)
             this._play()
@@ -109,6 +110,9 @@
         this.timer = setTimeout(() => {
           this.slider.goToPage(pageIndex, 0 , 400)
         },this.interval)
+      },
+      destroyed() {
+        clearTimeout(this.timer)
       }
     }
   }
