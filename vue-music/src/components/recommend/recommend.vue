@@ -1,25 +1,37 @@
 <template>
   <div class="recommend">
-    <div class='recommend-content'>
-      <div v-if='recommends.length' class='slider-wrapper'>
-        <slider>
-          <div v-for='item in recommends'>
-          	<a :href='item.linkUrl'>
-          	  <img :src='item.picUrl'></img>
-          	</a>
-          </div>
-        </slider>
+    <scroll ref='scroll' class='recommend-content' :data='discList'>
+      <div>
+        <div v-if='recommends.length' class='slider-wrapper'>
+          <slider>
+            <div v-for='item in recommends'>
+              <a :href='item.linkUrl'>
+                <img @load='loadImg' :src='item.picUrl'></img>
+              </a>
+            </div>
+          </slider>
+        </div>
+        <div class='recommend-list'>
+          <h1 class='list-title'>热门歌推荐</h1>
+          <ul>
+            <li @click="selectItem(item)" v-for="item in discList" class="item">
+                <div class="icon">
+                  <img width="60" height="60" :src="item.imgurl">
+                </div>
+                <div class="text">
+                  <h2 class="name" v-html="item.creator.name"></h2>
+                  <p class="desc" v-html="item.dissname"></p>
+                </div>
+            </li>
+          </ul>
+        </div>
       </div>
-      <div class='recommend-list'>
-        <h1 class='list-title'>热门歌单推荐</h1>
-        <ul>
-        </ul>
-      </div>
-    </div>
+    </scroll>
   </div>
 </template>
 
 <script type='text/ecmascript-6'>
+  import Scroll from 'base/scroll/scroll'
   import Slider from 'base/slider/slider'
   import {getRecommend,getDiscList} from 'api/recommend'
   import {ERR_OK} from 'api/config'
@@ -27,7 +39,8 @@
   export default {
     data () {
       return {
-      	recommends : []
+        recommends : [],
+        discList: []
       }
     },
     created() {
@@ -45,13 +58,21 @@
       _getDiscList() {
         getDiscList().then((res) => {
           if(res.code === ERR_OK) {
-            console.log(res.data.list)
+            this.discList = res.data.list
           }
         })
+      },
+      loadImg() {
+        //设置标志位 this.checkLoad ，只在加载第一张图片是执行一次 refresh
+        if(!this.checkLoad) {
+          this.$refs.scroll.refresh()
+          this.checkLoad = true
+        }
       }
     },
     components: {
-      Slider
+      Slider,
+      Scroll
     }
   }
 
@@ -101,9 +122,6 @@
               color: $color-text
             .desc
               color: $color-text-d
-      .loading-container
-        position: absolute
-        width: 100%
-        top: 50%
-        transform: translateY(-50%)
+
+
 </style>
