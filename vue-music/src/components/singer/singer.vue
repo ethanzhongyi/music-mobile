@@ -57,14 +57,14 @@
   	  	  	  name: item.Fsinger_name
   	  	  	}))
   	  	})
-  	  	// 为了得到有序列表 处理map
+  	  	//为了得到有序列表 处理map
   	  	let hot = []
   	  	let ret = []
   	  	for (let key in map) {
   	  	  let val = map[key]
   	  	  if(val.title.match(/[a-zA-Z]/)) {
   	  	  	ret.push(val)
-  	  	  }else if (val.tilte === HOT_NAME) {
+  	  	  }else if (val.title === HOT_NAME) {
   	  	  	hot.push(val)
   	  	  }
   	  	}
