@@ -11,9 +11,9 @@
         </ul>
       </li>
     </ul>
-    <div class="list-shortcut">
+    <div class="list-shortcut" @touchstart="onShortcutTouchStart">
       <ul>
-        <li v-for='item in shortcutList' class='item'>
+        <li v-for='(item,index) in shortcutList' :data-index='index' class='item'>
           {{item}}
         </li>
       </ul>
@@ -23,6 +23,7 @@
 
 <script type="text/ecmascript-6">
   import Scroll from 'base/scroll/scroll'
+  import {getData} from 'common/js/dom'
 
   const TITLE_HEIGHT = 30
   const ANCHOR_HEIGHT = 18
@@ -40,6 +41,12 @@
           return group.title.substr(0, 1)
         })
       } 
+    },
+    methods: {
+      onShortcutTouchStart(e) {
+        let anchorIndex = getData(e.target, 'index')
+        this.$refs.listview.scrollToElement(this.$refs.listGroup[anchorIndex], 0)
+      }
     },
     components: {
       Scroll
