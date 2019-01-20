@@ -28,6 +28,9 @@
         </li>
       </ul>
     </div>
+    <div class="list-fixed" ref="fixed" v-show="fixedTitle">
+      <div class="fixed-title">{{fixedTitle}} </div>
+    </div>
   </scroll>
 </template>
 
@@ -48,7 +51,8 @@
     data() {
       return {
         currentIndex: 0,
-        scrollY: -1
+        scrollY: -1,
+        diff: -1
       }
     },
     created() {
@@ -61,7 +65,13 @@
         return this.data.map((group) => {
           return group.title.substr(0, 1)
         })
-      } 
+      },
+      fixedTitle() {
+        if (this.scrollY > 0) {
+          return ''
+        }
+        return this.data[this.currentIndex] ? this.data[this.currentIndex].title : ''
+      }
     },
     methods: {
       onShortcutTouchStart(e) {
@@ -124,11 +134,20 @@
           let height2 = listHeight[i + 1]
           if(-newY >= height1 && -newY < height2) {
             this.currentIndex = i
+            this.diff = height2 + newY
             return
           }
         }
         // 当滚动到底部，且-newY大于最后一个元素的上限
         this.currentIndex = listHeight.length - 2
+      },
+      diff(newVal) {
+        let fixedTop = (newVal > 0 && newVal < TITLE_HEIGHT) ? newVal - TITLE_HEIGHT : 0
+        if (this.fixedTop === fixedTop) {
+          return
+        }
+        this.fixedTop = fixedTop
+        this.$refs.fixed.style.transform = `translate3d(0,${fixedTop}px,0)`
       }
     },
     components: {
