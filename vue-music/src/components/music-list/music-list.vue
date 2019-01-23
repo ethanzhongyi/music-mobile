@@ -5,11 +5,10 @@
     </div>
     <h1 class="title" v-html="title"></h1>
     <div class="bg-image" :style='bgStyle' ref='bgImage'>
-      <div class="filter">
-      </div>
       <div class="filter" ref="filter"></div>
     </div>
-    <scroll :data='songs' class='list' ref='list'>
+    <div class='bg-layer' ref='layer'></div>
+    <scroll @scroll='scroll' :probe-type='probeType' :listen-scroll='listenScroll' :data='songs' class='list' ref='list'>
       <div class="song-list-wrapper">
         <song-list :songs='songs'></song-list>
       </div>
@@ -20,6 +19,8 @@
 <script type="text/ecmascript-6">
   import Scroll from 'base/scroll/scroll'
   import SongList from 'base/song-list/song-list'
+
+  const RESERVED_HEIGHT = 40
 
   export default {
     props: {
@@ -36,13 +37,38 @@
         default: ''
       }
     },
+    data() {
+      return {
+        scrollY: 0
+      }
+    },
     computed: {
       bgStyle() {
         return `background-image:url(${this.bgImage})`
       }
     },
+    created() {
+      this.probeType = 3
+      this.listenScroll = true
+    },
     mounted() {
-      this.$refs.list.$el.style.top = `${this.$refs.bgImage.clientHeight}px`
+      this.imageHeight = this.$refs.bgImage.clientHeight
+      this.minTranslateY = -this.imageHeight + RESERVED_HEIGHT
+      //设置song list的高度
+      this.$refs.list.$el.style.top = `${this.imageHeight}px`
+    },
+    methods: {
+      scroll(pos) {
+        this.scrollY  = pos.y
+      }
+    },
+    watch: {
+      scrollY(newY) {
+        //借助layer层，滚动song list盖住图片
+        let translateY = Math.max(this.minTranslateY, newY)
+        this.$refs.layer.style['transform'] = `translate3d(0,${translateY}px,0)`
+        this.$refs.layer.style['webkitTransform'] = `translate3d(0,${translateY}px,0)`
+      }
     },
     components: {
       Scroll,
