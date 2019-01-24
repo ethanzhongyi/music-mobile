@@ -32,7 +32,7 @@ export function getDiscList() {
   	format: 'json'
   })
 
-  //return jsonp(url, data, options)
+  // 通过 webpack.dev.conf.js 伪装请求头
   return axios.get(url,{
   	params: data
   }).then((res) => {
