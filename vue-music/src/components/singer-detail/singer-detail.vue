@@ -24,6 +24,7 @@
   	  bgImage() {
   	  	return this.singer.avatar
   	  },
+      //通过 mapGetters 拿到了state 里面的singer
   	  ...mapGetters([
   	  	'singer'
   	  ])

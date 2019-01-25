@@ -82,6 +82,7 @@
         return hot.concat(ret)
       },
       ...mapMutations({
+        //通过 setSinger 方法去传 singer 到 mutation 里面
         setSinger: 'SET_SINGER'
       })
     },
