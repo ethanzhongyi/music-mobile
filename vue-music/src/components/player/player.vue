@@ -20,7 +20,7 @@
         <div class="middle">
           <div class="middle-l">
             <div class="cd-wrapper" ref='cdWrapper'>
-              <div class="cd">
+              <div class="cd" :class="cdCls">
                 <img class="image" :src='currentSong.image'>
               </div>
             </div>
@@ -50,7 +50,7 @@
     <transition name='mini'>
       <div class="mini-player" v-show='!fullScreen' @click='open'>
         <div class="icon">
-          <img width="40" height="40" :src='currentSong.image'>
+          <img :class="cdCls" width="40" height="40" :src='currentSong.image'>
         </div>
         <div class="text">
           <h2 class="name" v-html="currentSong.name"></h2>
@@ -80,6 +80,9 @@
 
   export default {
     computed: {
+      cdCls() {
+        return this.playing? 'play' : 'play pause'
+      },
       playIcon () {
         return this.playing? 'icon-pause': 'icon-play'
       },
@@ -251,23 +254,24 @@
             left: 10%
             top: 0
             width: 80%
-            box-sizing: border-box
             height: 100%
             .cd
               width: 100%
               height: 100%
+              box-sizing: border-box
+              border: 10px solid rgba(255, 255, 255, 0.1)
               border-radius: 50%
+              &.play
+                animation: rotate 20s linear infinite
+              &.pause
+                animation-play-state: paused
               .image
                 position: absolute
                 left: 0
                 top: 0
                 width: 100%
                 height: 100%
-                box-sizing: border-box
                 border-radius: 50%
-                border: 10px solid rgba(255, 255, 255, 0.1)
-              .play
-                animation: rotate 20s linear infinite
           .playing-lyric-wrapper
             width: 80%
             margin: 30px auto 0 auto
@@ -295,11 +299,6 @@
               font-size: $font-size-medium
               &.current
                 color: $color-text
-            .pure-music
-              padding-top: 50%
-              line-height: 32px
-              color: $color-text-l
-              font-size: $font-size-medium
       .bottom
         position: absolute
         bottom: 50px
@@ -385,17 +384,13 @@
       .icon
         flex: 0 0 40px
         width: 40px
-        height: 40px
         padding: 0 10px 0 20px
-        .imgWrapper
-          height: 100%
-          width: 100%
-          img
-            border-radius: 50%
-            &.play
-              animation: rotate 10s linear infinite
-            &.pause
-              animation-play-state: paused
+        img
+          border-radius: 50%
+          &.play
+            animation: rotate 10s linear infinite
+          &.pause
+            animation-play-state: paused
       .text
         display: flex
         flex-direction: column
@@ -424,9 +419,9 @@
           position: absolute
           left: 0
           top: 0
-  // @keyframes rotate
-  //   0%
-  //     transform: rotate(0)
-  //   100%
-  //     transform: rotate(360deg)
+  @keyframes rotate
+    0%
+      transform: rotate(0)
+    100%
+      transform: rotate(360deg)
 </style>
