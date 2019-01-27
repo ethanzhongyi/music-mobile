@@ -27,6 +27,13 @@
           </div>
         </div>
         <div class="bottom">
+          <div class="progress-wrapper">
+            <span class="time tiem-l">{{format(currentTime)}}</span>
+            <div class="progress-bar-wrapper">
+              
+            </div>
+            <span class="time tiem-r">{{format(currentSong.duration)}}</span>
+          </div>
           <div class="operators">
             <div class="icon i-left">
               <i class="icon-sequence"></i>
@@ -69,6 +76,7 @@
       ref="audio"
       @canplay='ready'
       @error='error'
+      @timeupdate='updateTime'
     ></audio>
   </div>
 </template>
@@ -83,7 +91,8 @@
   export default {
     data() {
       return {
-        songReady: false
+        songReady: false,
+        currentTime: 0
       }
     },
     computed: {
@@ -200,6 +209,23 @@
       error() {
         //歌曲加载出错
         this.songReady = true
+      },
+      updateTime(e) {
+        this.currentTime = e.target.currentTime
+      },
+      format(time) {
+          time = time | 0
+          const min = time / 60 | 0
+          const sec = this._pad(time % 60)
+          return `${min}:${sec}`
+      },
+      _pad(num, n = 2) {
+        let len = num.toString().length
+        if(len < 2) {
+          num = '0' + num
+          len ++
+        }
+        return num
       },
       _getPosAndScale() {
         const targetWidth = 40
