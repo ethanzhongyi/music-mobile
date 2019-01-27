@@ -35,7 +35,7 @@
               <i class="icon-prev"></i>
             </div>
             <div class="icon i-center">
-              <i class="icon-play"></i>
+              <i @click='togglePlaying' :class="playIcon"></i>
             </div>
             <div class="icon i-right">
               <i class="icon-next"></i>
@@ -57,12 +57,17 @@
           <p class='desc' v-html="currentSong.singer"></p>
         </div>
         <div class="control">
+          <i @click.stop='togglePlaying' :class="miniIcon"></i>
         </div>
         <div class="control">
           <i class="icon-playlist"></i>
         </div>
       </div>
     </transition>
+    <audio 
+      :src='currentSong.url'
+      ref="audio"
+    ></audio>
   </div>
 </template>
 
@@ -75,13 +80,23 @@
 
   export default {
     computed: {
+      playIcon () {
+        return this.playing? 'icon-pause': 'icon-play'
+      },
+      miniIcon() {
+        return this.playing? 'icon-pause-mini' : 'icon-play-mini'
+      },
       ...mapGetters([
         'fullScreen',
         'playlist',
-        'currentSong'
+        'currentSong',
+        'playing'
       ])
     },
     methods: {
+      togglePlaying() {
+        this.setPlaying(!this.playing)
+      },
       back() {
         this.setFullScreen(false)
       },
@@ -148,8 +163,23 @@
         }
       },
       ...mapMutations({
-        setFullScreen: 'SET_FULL_SCREEN'
+        setFullScreen: 'SET_FULL_SCREEN',
+        setPlaying: 'SET_PLAYING_STATE'
       })
+    },
+    watch: {
+      currentSong() {
+        this.$nextTick(() => {
+          this.$refs.audio.play()
+        })
+      },
+      playing(newPlaying) {
+        const audio = this.$refs.audio
+        this.$nextTick(() => {
+          //通过toggle去改变state里面play的值 true/false ;去播放/暂停
+          newPlaying ? audio.play() : audio.pause()
+        })
+      }
     }
   }
 </script>
