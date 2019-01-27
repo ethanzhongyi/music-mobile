@@ -31,14 +31,14 @@
             <div class="icon i-left">
               <i class="icon-sequence"></i>
             </div>
-            <div class="icon i-left">
-              <i class="icon-prev"></i>
+            <div class="icon i-left" :class='disableCls'>
+              <i @click='prev' class="icon-prev"></i>
             </div>
-            <div class="icon i-center">
+            <div class="icon i-center" :class='disableCls'>
               <i @click='togglePlaying' :class="playIcon"></i>
             </div>
-            <div class="icon i-right">
-              <i class="icon-next"></i>
+            <div class="icon i-right" :class='disableCls'>
+              <i @click='next' class="icon-next"></i>
             </div>
             <div class="icon i-right">
               <i class="icon-not-favorite"></i>
@@ -67,6 +67,8 @@
     <audio 
       :src='currentSong.url'
       ref="audio"
+      @canplay='ready'
+      @error='error'
     ></audio>
   </div>
 </template>
@@ -79,9 +81,18 @@
   const transform = prefixStyle('transform')
 
   export default {
+    data() {
+      return {
+        songReady: false
+      }
+    },
     computed: {
       cdCls() {
         return this.playing? 'play' : 'play pause'
+      },
+      //歌曲未 ready 的时候，设置按钮为灰色样式
+      disableCls() {
+        return this.songReady? '' : 'disable'
       },
       playIcon () {
         return this.playing? 'icon-pause': 'icon-play'
@@ -93,11 +104,43 @@
         'fullScreen',
         'playlist',
         'currentSong',
-        'playing'
+        'playing',
+        'currentIndex'
       ])
     },
     methods: {
+      next () {
+        if(!this.songReady) {
+          return
+        }
+        let index = this.currentIndex + 1
+        if(index === this.playlist.length) {
+          index = 0
+        }
+        this.setCurrentIndex(index)
+        if(!this.playing) {
+          this.togglePlaying()
+        }
+        this.songReady = false
+      },
+      prev () {
+        if(!this.songReady) {
+          return
+        }
+        let index = this.currentIndex - 1
+        if(index === -1) {
+          index = this.playlist.length - 1
+        }
+        this.setCurrentIndex(index)
+        if(!this.playing) {
+          this.togglePlaying()
+        }
+        this.songReady = false
+      },
       togglePlaying() {
+        if(!this.songReady) {
+          return
+        }
         this.setPlaying(!this.playing)
       },
       back() {
@@ -150,6 +193,14 @@
         this.$refs.cdWrapper.style.transition = ''
         this.$refs.cdWrapper.style[transform] = ''
       },
+      ready() {
+        //歌曲准备OK
+        this.songReady = true
+      },
+      error() {
+        //歌曲加载出错
+        this.songReady = true
+      },
       _getPosAndScale() {
         const targetWidth = 40
         const paddingLeft = 40
@@ -167,7 +218,8 @@
       },
       ...mapMutations({
         setFullScreen: 'SET_FULL_SCREEN',
-        setPlaying: 'SET_PLAYING_STATE'
+        setPlaying: 'SET_PLAYING_STATE',
+        setCurrentIndex: 'SET_CURRENT_INDEX'
       })
     },
     watch: {
