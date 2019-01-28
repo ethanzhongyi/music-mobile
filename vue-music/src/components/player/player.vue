@@ -30,7 +30,7 @@
           <div class="progress-wrapper">
             <span class="time tiem-l">{{format(currentTime)}}</span>
             <div class="progress-bar-wrapper">
-              <progress-bar :percent='percent'></progress-bar>
+              <progress-bar @progressChange='progressChange' :percent='percent'></progress-bar>
             </div>
             <span class="time tiem-r">{{format(currentSong.duration)}}</span>
           </div>
@@ -122,6 +122,12 @@
       ])
     },
     methods: {
+      progressChange(percent) {
+        this.$refs.audio.currentTime = percent * this.currentSong.duration
+        if(!this.playing) {
+          this.togglePlaying()
+        }
+      },
       next () {
         if(!this.songReady) {
           return
