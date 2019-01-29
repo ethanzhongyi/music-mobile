@@ -35,8 +35,8 @@
             <span class="time tiem-r">{{format(currentSong.duration)}}</span>
           </div>
           <div class="operators">
-            <div class="icon i-left">
-              <i class="icon-sequence"></i>
+            <div @click='changeMode' class="icon i-left">
+              <i :class="iconMode"></i>
             </div>
             <div class="icon i-left" :class='disableCls'>
               <i @click='prev' class="icon-prev"></i>
@@ -89,6 +89,7 @@
   import { prefixStyle } from 'common/js/dom'
   import ProgressBar from 'base/progress-bar/progress-bar'
   import ProgressCircle from 'base/progress-circle/progress-circle'
+  import {playMode} from 'common/js/config'
 
   const transform = prefixStyle('transform')
 
@@ -117,15 +118,26 @@
       percent() {
         return this.currentTime / this.currentSong.duration
       },
+      iconMode() {
+        return this.mode === playMode.sequence ? 'icon-sequence': this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
+      },
       ...mapGetters([
         'fullScreen',
         'playlist',
         'currentSong',
         'playing',
-        'currentIndex'
+        'currentIndex',
+        'mode'
       ])
     },
     methods: {
+      changeMode() {
+        /* 改变播放模式【单曲循环，随机播放，顺序播放】：通过 ...mapGetters 拿到 vuex 里面的[state] mode，
+        *  在此方法改变mode的值[0, 1, 2]，然后通过...mapMutation去修改state
+        */
+        const mode = (this.mode + 1) % 3
+        this.setPlayMode(mode)
+      },
       progressChange(percent) {
         this.$refs.audio.currentTime = percent * this.currentSong.duration
         if(!this.playing) {
@@ -259,7 +271,8 @@
       ...mapMutations({
         setFullScreen: 'SET_FULL_SCREEN',
         setPlaying: 'SET_PLAYING_STATE',
-        setCurrentIndex: 'SET_CURRENT_INDEX'
+        setCurrentIndex: 'SET_CURRENT_INDEX',
+        setPlayMode : 'SET_PLAY_MODE'
       })
     },
     watch: {
