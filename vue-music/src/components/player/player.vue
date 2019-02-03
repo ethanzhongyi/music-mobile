@@ -79,6 +79,7 @@
       @canplay='ready'
       @error='error'
       @timeupdate='updateTime'
+      @ended='end'
     ></audio>
   </div>
 </template>
@@ -187,6 +188,18 @@
           this.togglePlaying()
         }
         this.songReady = false
+      },
+      end() {
+        //歌曲结束时处理情况
+        if(this.mode === playMode.loop) {
+          this.loop()
+        } else {
+          this.next()
+        }
+      },
+      loop() {
+        this.$refs.audio.currentTime = 0
+        this.$refs.audio.play()
       },
       togglePlaying() {
         if(!this.songReady) {
