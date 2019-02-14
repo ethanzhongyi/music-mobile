@@ -183,9 +183,13 @@
         this.setCurrentIndex(index)
       },
       progressChange(percent) {
-        this.$refs.audio.currentTime = percent * this.currentSong.duration
+        const currentTime = percent * this.currentSong.duration
+        this.$refs.audio.currentTime = currentTime
         if(!this.playing) {
           this.togglePlaying()
+        }
+        if (this.currentLyric) {
+          this.currentLyric.seek(currentTime * 1000)
         }
       },
       next () {
@@ -227,12 +231,19 @@
       loop() {
         this.$refs.audio.currentTime = 0
         this.$refs.audio.play()
+        this.setPlayingState(true)
+        if (this.currentLyric) {
+          this.currentLyric.seek(0)
+        }
       },
       togglePlaying() {
         if(!this.songReady) {
           return
         }
         this.setPlaying(!this.playing)
+        if (this.currentLyric) {
+          this.currentLyric.togglePlay()
+        }
       },
       back() {
         this.setFullScreen(false)
@@ -360,6 +371,8 @@
         this.touch.percent = Math.abs(offsetWidth / window.innerWidth)
         this.$refs.lyricList.$el.style[transform] = `translate3d(${offsetWidth}px,0,0)`
         this.$refs.lyricList.$el.style[transitionDuration] = 0
+        this.$refs.middleL.style.opacity = 1 - this.touch.percent
+        this.$refs.middleL.style[transitionDuration] = 0
       },
       middleTouchEnd() {
         let offsetWidth
