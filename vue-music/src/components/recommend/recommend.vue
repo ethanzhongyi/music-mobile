@@ -30,6 +30,8 @@
         <loading></loading>
       </div>
     </scroll>
+    <!--router-view是二级路由的容器-->
+    <router-view></router-view>
   </div>
 </template>
 
