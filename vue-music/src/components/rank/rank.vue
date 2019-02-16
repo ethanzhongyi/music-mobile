@@ -28,6 +28,8 @@
   import {getTopList} from 'api/rank'
   import {ERR_OK} from 'api/config'
   import {playlistMixin} from 'common/js/mixin'
+  import {mapMutations} from 'vuex'
+
 
   export default {
   	mixins: [playlistMixin],
@@ -45,13 +47,23 @@
         this.$refs.rank.style.bottom = bottom
         this.$refs.toplist.refresh()
       },
+      selectItem(item) {
+      	this.$router.push({
+      	  path: `/rank/${item.id}`
+      	})
+      	//通过mapMutations 将数据写入state里，在详情页去getter
+      	this.setTopList(item)
+      },
   	  _getTopList() {
   	  	getTopList().then((res) => {
   	  	  if (res.code === ERR_OK) {
   	  	  	this.topList = res.data.topList
   	  	  }
   	  	})
-  	  }
+  	  },
+  	  ...mapMutations({
+  	  	setTopList: 'SET_TOP_LIST'
+  	  })
   	},
   	components: {
       Scroll,
