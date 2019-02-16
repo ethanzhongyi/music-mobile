@@ -1,6 +1,6 @@
 <template>
   <transition name="slide">
-    <music-list :title="title" :bg-image="bgImage"></music-list>
+    <music-list :songs='songs' :title="title" :bg-image="bgImage"></music-list>
   </transition>
 </template>
 
@@ -17,11 +17,45 @@
         return this.topList.topTitle
       },
       bgImage() {
-        return this.topList.picUrl
+        if (this.songs.length) {
+          return this.songs[0].image
+        }
+        return ''
       },
       ...mapGetters([
         'topList'
       ])
+    },
+    data() {
+      return {
+        songs: []
+      }
+    },
+    created() {
+      this._getMusicList()
+    },
+    methods: {
+      _getMusicList() {
+        if (!this.topList.id) {
+          this.$router.push('/rank')
+          return
+        }
+        getMusicList(this.topList.id).then((res) => {
+          if (res.code === ERR_OK) {
+            this.songs = this._normalizeSongs(res.songlist)
+          }
+        })
+      },
+      _normalizeSongs(list) {
+        let ret = []
+        list.forEach((item) => {
+          const musicData = item.data
+          if(musicData.songid && musicData.albumid) {
+            ret.push(createSong(musicData))
+          }
+        })
+        return ret
+      }
     },
     components: {
       MusicList
