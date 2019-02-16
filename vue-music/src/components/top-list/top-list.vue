@@ -1,6 +1,6 @@
 <template>
   <transition name="slide">
-    <music-list :songs='songs' :title="title" :bg-image="bgImage"></music-list>
+    <music-list :rank="rank" :title="title" :bg-image="bgImage" :songs="songs"></music-list>
   </transition>
 </template>
 
@@ -10,7 +10,6 @@
   import {ERR_OK} from 'api/config'
   import {mapGetters} from 'vuex'
   import {createSong} from 'common/js/song'
-
   export default {
     computed: {
       title() {
@@ -28,7 +27,8 @@
     },
     data() {
       return {
-        songs: []
+        songs: [],
+        rank: true
       }
     },
     created() {
@@ -50,7 +50,7 @@
         let ret = []
         list.forEach((item) => {
           const musicData = item.data
-          if(musicData.songid && musicData.albumid) {
+          if (musicData.songid && musicData.albummid) {
             ret.push(createSong(musicData))
           }
         })
