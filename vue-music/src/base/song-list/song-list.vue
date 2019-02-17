@@ -2,7 +2,7 @@
   <div class="song-list">
     <ul>
       <li @click="selectItem(song, index)" class="item" v-for="(song, index) in songs">
-        <div class="rank" v-show="rank">
+        <div class="rankCls" v-show="rank">
           <span :class="getRankCls(index)" v-text="getRankText(index)"></span>
         </div>
         <div class="content">
@@ -59,9 +59,9 @@
       box-sizing: border-box
       height: 64px
       font-size: $font-size-medium
-      .rank
-        position: relative
-        top: 0
+      .rankCls
+        // position: relative
+        // top: 0
         flex: 0 0 25px
         width: 25px
         margin-right: 30px
