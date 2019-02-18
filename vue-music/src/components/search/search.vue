@@ -1,7 +1,7 @@
 <template>
   <div class="search">
     <div class="search-box-wrapper">
-      <search-box ref='searchBox'></search-box>
+      <search-box ref='searchBox' @query='onQueryChange'></search-box>
     </div>
     <div class="shortcut-wrapper">
       <div class="shortcut">
@@ -15,6 +15,9 @@
 	    </div>
       </div>
     </div>
+    <div class="search-result">
+      <suggest :query='query'></suggest>
+    </div>
   </div>
 </template>
 
@@ -22,11 +25,13 @@
   import SearchBox from 'base/search-box/search-box'
   import {getHotKey} from 'api/search'
   import {ERR_OK} from 'api/config'
+  import Suggest from 'components/suggest/suggest'
 
   export default {
   	data() {
   	  return {
-  	  	hotKey: []
+  	  	hotKey: [],
+        query: ''
   	  }
   	},
   	created() {
@@ -36,6 +41,11 @@
   	  addQuery(hotKey) {
   	  	this.$refs.searchBox.setQuery(hotKey)
   	  },
+      onQueryChange(query) {
+        this.query = query
+        console.log('query get')
+        console.log(query)
+      },
   	  _getHotKey() {
   	  	getHotKey().then((res) => {
           if (res.code === ERR_OK) {
@@ -45,7 +55,8 @@
   	  }
   	},
   	components: {
-  	  SearchBox
+  	  SearchBox,
+      Suggest
   	}
   }
 </script>
