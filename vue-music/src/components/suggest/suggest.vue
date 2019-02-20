@@ -42,8 +42,7 @@
       search() {
       	search(this.query, this.page, this.showSinger).then((res) => {
       	  if(res.code === ERR_OK) {
-      	  	console.log(res.data)
-      	  	// this.result = this.result.concat(this._genResult(res.data))
+      	  	this.result = this._genResult(res.data)
       	  }
       	})
       },
@@ -58,7 +57,8 @@
       	if(item.type === TYPE_SINGER) {
       	  return item.singername
       	} else {
-      	  return `${item.songname}-${filterSinger(item.singer)}`
+          console.log(item)
+      	  return `${item.name}-${filterSinger(item.singer)}`
       	}
       },
       _genResult(data) {
