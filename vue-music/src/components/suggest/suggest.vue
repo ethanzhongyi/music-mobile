@@ -56,6 +56,8 @@
       	search(this.query, this.page, this.showSinger, PERPAGE).then((res) => {
       	  if(res.code === ERR_OK) {
       	  	this.result = this._genResult(res.data)
+            console.log(res.data)
+            console.log(this.result)
             //检查是否还有数据
             this._checkMore(res.data)
       	  }
@@ -81,7 +83,7 @@
       },
       getDisplayName(item) {
       	if(item.type === TYPE_SINGER) {
-      	  return item.singername
+      	  return item.zhida_singer.singerName
       	} else {
       	  return `${item.name}-${filterSinger(item.singer)}`
       	}
@@ -94,7 +96,7 @@
       },
       _genResult(data) {
         let ret = []
-        if (data.zhida && data.zhida.singerid) {
+        if (data.zhida && data.zhida.zhida_singer) {
           ret.push({...data.zhida, ...{type: TYPE_SINGER}})
         }
         if (data.song) {
