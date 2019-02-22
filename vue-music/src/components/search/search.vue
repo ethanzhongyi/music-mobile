@@ -43,8 +43,6 @@
   	  },
       onQueryChange(query) {
         this.query = query
-        console.log('query get')
-        console.log(query)
       },
   	  _getHotKey() {
   	  	getHotKey().then((res) => {
