@@ -20,6 +20,7 @@
             <i class="icon-clear"></i>
           </span>
         </h1>
+        <search-list :searches="searchHistory"></search-list>
       </div>
       </div>
     </div>
@@ -36,6 +37,7 @@
   import {ERR_OK} from 'api/config'
   import Suggest from 'components/suggest/suggest'
   import {mapActions, mapGetters} from 'vuex'
+  import SearchList from 'base/search-list/search-list'
 
   export default {
   	data() {
@@ -78,7 +80,8 @@
   	},
   	components: {
   	  SearchBox,
-      Suggest
+      Suggest,
+      SearchList
   	}
   }
 </script>
