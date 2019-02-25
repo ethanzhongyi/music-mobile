@@ -27,6 +27,7 @@
   import Loading from 'base/loading/loading'
   import Singer from 'common/js/singer'
   import {mapMutations} from 'vuex'
+  import {mapActions} from 'vuex'
 
   const TYPE_SINGER = 'singer'
   const PERPAGE = 20
@@ -100,6 +101,8 @@
             path: `/search/${singer.id}`
           })
           this.setSinger(singer)
+        } else {
+          this.insertSong(item)
         }
       },
       _checkMore(data) {
@@ -120,7 +123,10 @@
       },
       ...mapMutations({
         setSinger: 'SET_SINGER'
-      })
+      }),
+      ...mapActions([
+        'insertSong'
+      ])
     },
     watch: {
       query() {
