@@ -58,11 +58,13 @@
           click: this.click,
           eventPassthrough: this.direction === DIRECTION_V ? DIRECTION_H : DIRECTION_V
         })
+        //scroll 滚动时派发 scroll 事件
         if (this.listenScroll) {
           this.scroll.on('scroll', (pos) => {
             this.$emit('scroll', pos)
           })
         }
+        //scroll 停止滚动会派发 scrollEnd 事件
         if (this.pullup) {
           this.scroll.on('scrollEnd', () => {
             if (this.scroll.y <= (this.scroll.maxScrollY + 50)) {
@@ -70,6 +72,7 @@
             }
           })
         }
+        //scroll 滚动之前会派发 beforeScrollStart 事件
         if (this.beforeScroll) {
           this.scroll.on('beforeScrollStart', () => {
             this.$emit('beforeScroll')

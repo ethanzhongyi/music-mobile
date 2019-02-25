@@ -2,6 +2,8 @@
   <scroll class="suggest" 
           :data='result'
           :pullup='pullup'
+          :beforeScroll='beforeScroll'
+          @beforeScroll='listScroll'
           @scrollToEnd='searchMore'
           ref='suggest'
   >
@@ -48,7 +50,8 @@
       	page: 1,
       	result: [],
         pullup: true,
-        hasMore: true
+        hasMore: true,
+        beforeScroll: true
       }
     },
     methods: {
@@ -59,8 +62,6 @@
       	search(this.query, this.page, this.showSinger, PERPAGE).then((res) => {
       	  if(res.code === ERR_OK) {
       	  	this.result = this._genResult(res.data)
-            console.log(res.data)
-            console.log(this.result)
             //检查是否还有数据
             this._checkMore(res.data)
       	  }
@@ -104,6 +105,9 @@
         } else {
           this.insertSong(item)
         }
+      },
+      listScroll() {
+        this.$emit('listScroll')
       },
       _checkMore(data) {
         const song = data.song
