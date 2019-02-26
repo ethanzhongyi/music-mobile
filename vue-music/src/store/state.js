@@ -1,6 +1,9 @@
 import {playMode} from 'common/js/config'
 import {loadSearch} from 'common/js/cache'
 
+//playlist: 播放列表（当顺序播放时 和 sequenceList 是一样的，随机播放时就不一样）
+//sequenceList： 顺序列表
+
 const state = {
   singer: {},
   playing: false,
