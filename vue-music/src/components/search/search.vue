@@ -1,9 +1,9 @@
 <template>
   <div class="search">
     <div class="search-box-wrapper">
-      <search-box ref='searchBox' @query='onQueryChange'></search-box>
+      <search-box  ref='searchBox' @query='onQueryChange'></search-box>
     </div>
-    <div class="shortcut-wrapper" v-show='!query'>
+    <div ref='shortcutWrapper' class="shortcut-wrapper" v-show='!query'>
       <scroll ref='shortcut' class="shortcut" :data='shortcut'>
       <div>
   	    <div class="hot-key">
@@ -26,8 +26,8 @@
       </div>
       </scroll>
     </div>
-    <div class="search-result" v-show='query'>
-      <suggest @select='saveSearch' @listScroll='blurInput' :query='query'></suggest>
+    <div ref='searchResult' class="search-result" v-show='query'>
+      <suggest ref='suggest' @select='saveSearch' @listScroll='blurInput' :query='query'></suggest>
     </div>
     <confirm ref='confirm' @confirm='confirm' confirmBtnText='清空' text='是否清空搜索历史记录'></confirm>
     <router-view></router-view>
@@ -43,8 +43,10 @@
   import SearchList from 'base/search-list/search-list'
   import Confirm from 'base/confirm/confirm'
   import Scroll from 'base/scroll/scroll'
+  import {playlistMixin} from 'common/js/mixin'
 
   export default {
+    mixins: [playlistMixin],
   	data() {
   	  return {
   	  	hotKey: [],
@@ -63,6 +65,15 @@
       }
     },
   	methods: {
+      handlePlaylist(playlist) {
+        const bottom = playlist.length > 0 ? '60px' : ''
+
+        this.$refs.shortcutWrapper.style.bottom = bottom
+        this.$refs.shortcut.refresh()
+
+        this.$refs.searchResult.style.bottom = bottom
+        this.$refs.suggest.refresh()
+      },
   	  addQuery(hotKey) {
   	  	this.$refs.searchBox.setQuery(hotKey)
   	  },
