@@ -9,11 +9,11 @@
             <span class="clear"><i class="icon-clear"></i></span>
           </h1>
         </div>
-        <div class="list-content">
+        <scroll ref='listContent' :data='sequenceList' class="list-content">
           <ul>
-            <li class="item">
-              <i class="current"></i>
-              <span class="text"></span>
+            <li class="item" v-for='item in sequenceList'>
+              <i class="current" :class="getCurrentIcon(item)"></i>
+              <span class="text">{{item.name}}</span>
               <span class="like">
                 <i class="icon-not-favorite"></i>
               </span>
@@ -22,7 +22,7 @@
               </span>
             </li>
           </ul>
-        </div>
+        </scroll>
         <div class="list-operate">
           <div class="add">
             <i class="icon-add"></i>
@@ -38,6 +38,9 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import {mapGetters} from 'vuex'
+  import Scroll from 'base/scroll/scroll'
+
   export default {
     data() {
       return {
@@ -45,15 +48,32 @@
         refreshDelay: 120
       }
     },
+    computed: {
+      ...mapGetters([
+        'sequenceList',
+        'currentSong'
+      ])
+    },
     methods: {
       show() {
         this.showFlag = true
+        setTimeout(() => {
+          this.$refs.listContent.refresh()
+        }, 20)
       },
       hide() {
         this.showFlag = false
+      },
+      getCurrentIcon(item) {
+        if(this.currentSong.id === item.id) {
+          return 'icon-play'
+        } else {
+          return ''
+        }
       }
     },
     components: {
+      Scroll
     }
   }
 </script>
