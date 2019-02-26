@@ -10,8 +10,8 @@
           </h1>
         </div>
         <scroll ref='listContent' :data='sequenceList' class="list-content">
-          <ul>
-            <li ref='itemList' class="item" v-for='(item, index) in sequenceList' @click='selectItem(item, index)'>
+          <transition-group name='list' tag='ul'>
+            <li :key='item.id' ref='itemList' class="item" v-for='(item, index) in sequenceList' @click='selectItem(item, index)'>
               <i class="current" :class="getCurrentIcon(item)"></i>
               <span class="text">{{item.name}}</span>
               <span class="like">
@@ -21,7 +21,7 @@
                 <i class="icon-delete"></i> 
               </span>
             </li>
-          </ul>
+          </transition-group>
         </scroll>
         <div class="list-operate">
           <div class="add">
