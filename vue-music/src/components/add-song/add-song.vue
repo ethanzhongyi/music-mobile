@@ -7,18 +7,28 @@
       	  <i class="icon-close"></i>
       	</div>
       </div>
-      <div class="search-box-wrapper"></div>
-      <div class="shorcur"></div>
-      <div class="search-result"></div>
+      <div class="search-box-wrapper">
+      	<search-box @query='search' placeholder='搜索歌曲'></search-box>
+      </div>
+      <div class="shorcur" v-show='!query'></div>
+      <div class="search-result" v-show='query'>
+      	<suggest :query='query' :showSinger='showSinger' @select='selectSugggest' @listScroll='blurInput'></suggest>
+      </div>
     </div>
   </transition>
 </template>
 
 <script type="text/ecmascript-6">
+  import SearchBox from 'base/search-box/search-box'
+  import Suggest from 'components/suggest/suggest'
+  import {searchMixin} from 'common/js/mixin'
+
   export default {
+  	mixins: [searchMixin],
   	data() {
       return {
-      	showFlag: false
+      	showFlag: false,
+      	showSinger: false
       }
   	},
   	methods: {
@@ -27,7 +37,17 @@
   	  },
   	  hide() {
   	  	this.showFlag = false
+  	  },
+  	  search(query) {
+  	  	this.query = query
+  	  },
+  	  selectSugggest() {
+  	  	this.saveSearch()
   	  }
+  	},
+  	components: {
+  	  SearchBox,
+  	  Suggest
   	}
   }
 </script>
