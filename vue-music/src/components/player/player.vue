@@ -117,11 +117,13 @@
   import Lyric from 'lyric-parser'
   import Scroll from 'base/scroll/scroll'
   import Playlist from 'components/playlist/playlist'
+  import {playerMixin} from 'common/js/mixin'
 
   const transform = prefixStyle('transform')
   const transitionDuration = prefixStyle('transitionDuration')
 
   export default {
+    mixins: [playerMixin],
     data() {
       return {
         songReady: false,
@@ -150,44 +152,16 @@
       percent() {
         return this.currentTime / this.currentSong.duration
       },
-      iconMode() {
-        return this.mode === playMode.sequence ? 'icon-sequence': this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
-      },
       ...mapGetters([
         'fullScreen',
-        'playlist',
-        'currentSong',
         'playing',
-        'currentIndex',
-        'mode',
-        'sequenceList'
+        'currentIndex'
       ])
     },
     created() {
       this.touch = {}
     },
     methods: {
-      changeMode() {
-        /* 改变播放模式【单曲循环，随机播放，顺序播放】：通过 ...mapGetters 拿到 vuex 里面的[state] mode，
-        *  在此方法改变mode的值[0, 1, 2]，然后通过...mapMutation去修改state
-        */
-        const mode = (this.mode + 1) % 3
-        this.setPlayMode(mode)
-        let list = null
-        if (mode === playMode.random) {
-          list = shuffle(this.sequenceList)
-        } else {
-          list = this.sequenceList
-        }
-        this.resetCurrentIndex(list)
-        this.setPlayList(list)
-      },
-      resetCurrentIndex(list) {
-        let index = list.findIndex((item) => {
-          return item.id === this.currentSong.id
-        })
-        this.setCurrentIndex(index)
-      },
       progressChange(percent) {
         const currentTime = percent * this.currentSong.duration
         this.$refs.audio.currentTime = currentTime
@@ -428,10 +402,7 @@
       },
       ...mapMutations({
         setFullScreen: 'SET_FULL_SCREEN',
-        setPlaying: 'SET_PLAYING_STATE',
-        setCurrentIndex: 'SET_CURRENT_INDEX',
-        setPlayMode : 'SET_PLAY_MODE',
-        setPlayList: 'SET_PLAYLIST'
+        setPlaying: 'SET_PLAYING_STATE'
       })
     },
     watch: {
