@@ -1,8 +1,12 @@
 import storage from 'good-storage'
 
 const SEARCH_KEY = '__search__'
-const SEARCH_MAX_LENGRH = 15
+const SEARCH_MAX_LENGTH = 15
 
+const PALY_KEY = '__paly__'
+const PLAY_MAX_LENGTH = 200
+
+//插入到数组
 function insertArray(arr, val, compare, maxLen) {
   const index = arr.findIndex(compare)
   if (index === 0) {
@@ -17,6 +21,7 @@ function insertArray(arr, val, compare, maxLen) {
   }
 }
 
+//从数组删除
 function deleteFromArray(arr, compare) {
   const index = arr.findIndex(compare)
   if (index > -1) {
@@ -28,7 +33,7 @@ export function saveSearch(query) {
   let searches = storage.get(SEARCH_KEY, [])
   insertArray(searches, query, (item) => {
   	return item === query
-  }, SEARCH_MAX_LENGRH)
+  }, SEARCH_MAX_LENGTH)
   storage.set(SEARCH_KEY, searches)
   return searches
 }
@@ -49,4 +54,18 @@ export function deleteSearch(query) {
 export function clearSearch() {
   storage.remove(SEARCH_KEY)
   return []
+}
+
+//最近播放列表的核心函数
+export function savePlay(song) {
+  let songs = storage.get(PALY_KEY, [])
+  insertArray(songs, song, (item) =>{
+    return item.id === song.id
+  },PLAY_MAX_LENGTH)
+  storage.set(PALY_KEY, songs)
+  return songs
+}
+
+export function loadPlay() {
+  return storage.get(PALY_KEY, [])
 }

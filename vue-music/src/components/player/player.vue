@@ -107,7 +107,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import {mapGetters, mapMutations} from 'vuex'
+  import {mapGetters, mapMutations, mapActions} from 'vuex'
   import animations from 'create-keyframe-animation'
   import { prefixStyle } from 'common/js/dom'
   import ProgressBar from 'base/progress-bar/progress-bar'
@@ -288,6 +288,7 @@
       ready() {
         //歌曲准备OK
         this.songReady = true
+        this.savePlayHistory(this.currentSong)
       },
       error() {
         //歌曲加载出错
@@ -403,7 +404,10 @@
       ...mapMutations({
         setFullScreen: 'SET_FULL_SCREEN',
         setPlaying: 'SET_PLAYING_STATE'
-      })
+      }),
+      ...mapActions([
+        'savePlayHistory'
+      ])
     },
     watch: {
       currentSong(newSong, oldSong) {

@@ -12,6 +12,13 @@
       </div>
       <div class="shortcut" v-show='!query'>
       	<switches :switches='switches' :currentIndex='currentIndex' @switch='switchesItem'></switches>
+      	<div class="list-wrapper">
+      	  <scroll class='list-scroll' v-if='currentIndex === 0' :data='playHistory'>
+      	  	<div class="list-inner">
+      	  	  <song-list :songs='playHistory'></song-list>
+      	  	</div>
+      	  </scroll>
+      	</div>
       </div>
       <div class="search-result" v-show='query'>
       	<suggest :query='query' :showSinger='showSinger' @select='selectSugggest' @listScroll='blurInput'></suggest>
@@ -25,6 +32,9 @@
   import Suggest from 'components/suggest/suggest'
   import {searchMixin} from 'common/js/mixin'
   import Switches from 'base/switches/switches'
+  import {mapGetters} from 'vuex'
+  import SongList from 'base/song-list/song-list'
+  import Scroll from 'base/scroll/scroll'
 
   export default {
   	mixins: [searchMixin],
@@ -38,6 +48,11 @@
       	  {name: '搜索历史'}
       	]
       }
+  	},
+  	computed: {
+  	  ...mapGetters([
+  		'playHistory'
+  	  ])
   	},
   	methods: {
   	  show() {
@@ -59,7 +74,9 @@
   	components: {
   	  SearchBox,
   	  Suggest,
-  	  Switches
+  	  Switches,
+  	  Scroll,
+  	  SongList
   	}
   }
 </script>
