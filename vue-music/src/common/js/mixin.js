@@ -1,5 +1,6 @@
 import {mapGetters, mapMutations, mapActions} from 'vuex'
 import {playMode} from 'common/js/config'
+import {shuffle} from 'common/js/util'
 
 export const playlistMixin = {
   computed: {
@@ -51,7 +52,7 @@ export const playerMixin = {
           list = this.sequenceList
         }
         this.resetCurrentIndex(list)
-        this.setPlayList(list)
+        this.setPlaylist(list)
       },
       resetCurrentIndex(list) {
         let index = list.findIndex((item) => {
