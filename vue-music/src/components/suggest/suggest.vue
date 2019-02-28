@@ -28,6 +28,7 @@
   import Scroll from 'base/scroll/scroll'
   import Loading from 'base/loading/loading'
   import Singer from 'common/js/singer'
+  import {searchSong} from 'common/js/song'
   import {mapMutations} from 'vuex'
   import {mapActions} from 'vuex'
 
@@ -96,6 +97,7 @@
       	}
       },
       seleteItem(item) {
+        console.log(item)
         if (item.type === TYPE_SINGER) {
           const singer = new Singer({
             id: item.zhida_singer.singerMID,
@@ -106,7 +108,7 @@
           })
           this.setSinger(singer)
         } else {
-          this.insertSong(item)
+          this.insertSong(searchSong(item))
         }
         this.$emit('select')
       },
