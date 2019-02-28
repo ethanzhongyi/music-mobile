@@ -62,7 +62,6 @@ export const playerMixin = {
         this.setCurrentIndex(index)
       },
       toogleFavorite(song) {
-        console.log('toogleFavorite')
         if (this.isFavorite(song)) {
           this.deleteFavoriteList(song)
         } else {
