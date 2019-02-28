@@ -13,7 +13,7 @@
       <div class="shortcut" v-show='!query'>
       	<switches :switches='switches' :currentIndex='currentIndex' @switch='switchesItem'></switches>
       	<div class="list-wrapper">
-      	  <scroll ref='songList'class='list-scroll' v-if='currentIndex === 0' :data='playHistory'>
+      	  <scroll ref='songList' class='list-scroll' v-if='currentIndex === 0' :data='playHistory'>
       	  	<div class="list-inner">
       	  	  <song-list :songs='playHistory'></song-list>
       	  	</div>
